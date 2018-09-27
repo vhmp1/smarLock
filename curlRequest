@@ -1,0 +1,19 @@
+csjKa1QbDKY:APA91bF9iq9D_nDc7zVZmoTGlM8awr2TejpqMmmOE2WbAoBh65pnO-vzOS5QVkqHME2QoQ2OzPQOC7AgCJqHtMxOplt6fqmFCU78ZXvrIUe722Fa3QegIj77C-cVWZ8gIOsYd_GOv5gR
+
+curl -X POST -H "Authorization: Bearer API_TOKEN" -H "Content-Type: application/json" -d '{
+    "tokens": ["DEV_DEVICE_TOKEN"],
+    "profile": "PROFILE_NAME",
+    "notification": {
+        "message": "This is my demo push!"
+    }
+}' "https://api.ionic.io/push/notifications"
+
+ curl -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyZGNkMGJjMS04NzQxLTQ2NTctYTQ4Ni02ZGM2ZjIzMjM0ODUifQ.U4hlc0hY7tuBPM6-mDQjxfiQT1uf9z-neLfieaMQoGI" -H "Content-Type: application/json" -d '{
+     "tokens": ["csjKa1QbDKY:APA91bF9iq9D_nDc7zVZmoTGlM8awr2TejpqMmmOE2WbAoBh65pnO-vzOS5QVkqHME2QoQ2OzPQOC7AgCJqHtMxOplt6fqmFCU78ZXvrIUe722Fa3QegIj77C-cVWZ8gIOsYd_GOv5gR"],
+     "profile": "test",
+     "notification": {
+         "message": "This is my demo push!"
+     }
+ }' "https://api.ionic.io/push/notifications"
+
+

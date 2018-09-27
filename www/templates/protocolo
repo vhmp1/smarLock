@@ -1,0 +1,11 @@
+0: GPS Position (lat;long#)
+1: Tranca manual (1/0#)
+2: Definir tranca distância (1/0;dist#)
+3: Definir tranca tempo (1/0;hh;mm#)
+
+exemplo 
+
+0:-19.8652;-44.249999#
+1:1#
+2:1;200#
+3:1;12;56#

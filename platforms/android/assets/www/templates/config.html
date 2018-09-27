@@ -1,0 +1,46 @@
+<ion-view view-title="Configurações">
+	<ion-content ng-controller="configCtrl">
+		<ul class="list">
+			<li class="item item-toggle">
+		    	Tranca manual
+		    	<label class="toggle toggle-positive" ng-model="manual.checked" ng-init="manual.checked = checaStatus()" ng-click="close()">
+					<input type="checkbox">
+		        	<div class="track">
+		        		<div class="handle"></div>
+		       		</div>
+		     	</label>
+			</li>
+
+			<li class="item item-toggle">
+		    	Tranca por distância
+		    	<label class="toggle toggle-positive" ng-model="distancia.checked" ng-init="distancia.checked = checaStatus()" ng-click="close()">
+					<input type="checkbox">
+		        		<div class="track">
+		        	<div class="handle"></div>
+		       		</div>
+		     	</label>
+		     	<br /><br />
+		     	<div class="list">
+		     		<input type="range" min="50" max="100" value="80" ng-model="distancia.value" style="width: 100%;">
+		     		<span class="item-note"> Distância: {{distancia.atual}} </span>
+		     	</div>
+			</li>
+
+			<li class="item item-toggle">
+		    	Tranca programada
+		    	<label class="toggle toggle-positive" ng-model="programada.checked" ng-init="programada.checked = checaStatus()" ng-change="console.log(programada.checked)">
+					<input type="checkbox">
+		        		<div class="track">
+		        	<div class="handle"></div>
+		       		</div>
+		     	</label>
+
+	     		<span class="item item-icon-right"> 
+	     			Abertura
+	     			<!-- <i class="icon ion-gear-a" ng-click="setTime()"></i> -->
+	     			<input type="time" ng-model="programada.time" ng-click="print()">
+	     		</span>		     	
+			</li>
+		</ul>
+	</ion-content>
+</ion-view>
