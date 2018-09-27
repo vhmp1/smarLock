@@ -1,10 +1,40 @@
 var pathBase = "http://localhost/smartLock/sevices";
 
 angular.module('starter.controllers', ['ngCordova'])
-.controller('mainCtrl', function($scope, $interval) {
-  $interval(function() {
-    alert("send gps location");
-  }, 30000);
+.controller('mainCtrl', function($scope, $ionicPlatform, $state, $interval, $cordovaGeolocation) {
+  var options = {timeout: 10000, enableHighAccuracy: true};
+
+  //Sobreescreve o funcionamento padrão do botão de retornar no Android;
+  //Retorna sempre para a tela inicial, ao menos que esteja no estado 'app.alimento' (removido dessa versão do app)
+  //O parametro 1000 representa a prioridade (nesse caso a mais alta)
+  $ionicPlatform.registerBackButtonAction(function(e) {
+    $ionicHistory.nextViewOptions({
+        disableBack: true
+    });
+    
+    $state.go("app.main");
+  }, 1000);
+
+  // send GPS position via serial
+  var gps = $interval(function() {
+    $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+      var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      console.log("0:" + latLng.lat() + ";" + latLng.lng() + "#");
+      // serial.write("0:" + latLng.lat() + ";" + latLng.lng() + "#");
+    }, function(error){
+      console.log("Could not get location");
+    }); 
+  }, 15000);
+
+  // get data from MSP
+  var mspdata = $interval(function() {
+    serial.read(function(buffer){
+      alert(buffer);
+    }, function(){
+      alert("Error!");
+    });
+  }, 10);
+
 })
 
 .controller('statusCtrl', function($scope, $state, $cordovaGeolocation, Position) {
@@ -12,7 +42,6 @@ angular.module('starter.controllers', ['ngCordova'])
  
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
     var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
- 
     var mapOptions = {
       center: latLng,
       zoom: 15,
@@ -49,22 +78,62 @@ angular.module('starter.controllers', ['ngCordova'])
   });
 })
 
-.controller('configCtrl', function($scope, $ionicPlatform) {
-  
-  $scope.a = function(){
-    console.log('aaaa');
-  }
+.controller('configCtrl', function($scope, $ionicHistory, $ionicSideMenuDelegate, $ionicPlatform) {
+  $scope.manual = {};
+  $scope.programada = {};
+  $scope.distancia = {};
 
-  $scope.print = function(){
-    console.log($scope.programada.time);
-  }
+  $scope.distancia.value = 70;
+  $scope.programada.time = new Date('9:20:05');
+
+  // disable menu 
+  $scope.$on('$ionicView.afterEnter', function(event) {
+    $ionicSideMenuDelegate.canDragContent(false);
+  });
+
+  //enable side menu drag before moving to next view
+  $scope.$on('$ionicView.beforeLeave', function(event) {
+    $ionicSideMenuDelegate.canDragContent(true);
+  });
 
   $scope.close = function(){
-    serial.write('1', function(){
-      alert('Sucess!');
-    }, function(){
-      alert('Error!');
-    });
+    if($scope.manual.checked){
+      serial.write('1:1#', function(){
+        alert('Sucess!');
+      }, function(){
+        alert('Error!');
+      });
+    } else {
+      serial.write('1:0#', function(){
+        alert('Sucess!');
+      }, function(){
+        alert('Error!');
+      });
+    }
+  };
+
+  $scope.setDist = function(){
+    if($scope.programada.checked){
+      $scope.distancia.checked = false;
+      //serial.write('2:1;' + $scope.distancia.value + '#');
+      console.log('2:1;' + $scope.distancia.value + '#');
+    } else {
+      //serial.write('2:0;' + $scope.distancia.value + '#');
+      console.log('2:0;' + $scope.distancia.value + '#');
+    }
+  };
+
+  $scope.setTime = function(){
+    var date = new Date($scope.programada.time);
+
+    if($scope.distancia.checked){
+      $scope.programada.checked = false;
+      //serial.write('3:1;' + date.getHours() + ':' + date.getMinutes() + '#');
+      alert('3:1;' + date.getHours() + ':' + date.getMinutes() + '#');
+    } else {
+      //serial.write('3:0;' + date.getHours() + ':' + date.getMinutes() + '#');
+      alert('3:0;' + date.getHours() + ':' + date.getMinutes() + '#');
+    }
   };
 })
 

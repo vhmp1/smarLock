@@ -26,6 +26,15 @@ angular.module('starter.controllers', ['ngCordova'])
     }); 
   }, 15000);
 
+  // get data from MSP
+  var mspdata = $interval(function() {
+    serial.read(function(buffer){
+      alert(buffer);
+    }, function(){
+      alert("Error!");
+    });
+  }, 10);
+
 })
 
 .controller('statusCtrl', function($scope, $state, $cordovaGeolocation, Position) {
@@ -75,6 +84,7 @@ angular.module('starter.controllers', ['ngCordova'])
   $scope.distancia = {};
 
   $scope.distancia.value = 70;
+  $scope.programada.time = new Date('9:20:05');
 
   // disable menu 
   $scope.$on('$ionicView.afterEnter', function(event) {
@@ -86,38 +96,44 @@ angular.module('starter.controllers', ['ngCordova'])
     $ionicSideMenuDelegate.canDragContent(true);
   });
 
-  $scope.a = function(){
-    console.log('aaaa');
-  };
-
-  $scope.print = function(){
-    console.log($scope.programada.time);
-  };
-
   $scope.close = function(){
-    serial.write('1', function(){
-      alert('Sucess!');
-    }, function(){
-      alert('Error!');
-    });
+    if($scope.manual.checked){
+      serial.write('1:1#', function(){
+        alert('Sucess!');
+      }, function(){
+        alert('Error!');
+      });
+    } else {
+      serial.write('1:0#', function(){
+        alert('Sucess!');
+      }, function(){
+        alert('Error!');
+      });
+    }
   };
 
   $scope.setDist = function(){
     if($scope.programada.checked){
       $scope.distancia.checked = false;
-      return;
+      //serial.write('2:1;' + $scope.distancia.value + '#');
+      console.log('2:1;' + $scope.distancia.value + '#');
+    } else {
+      //serial.write('2:0;' + $scope.distancia.value + '#');
+      console.log('2:0;' + $scope.distancia.value + '#');
     }
-
-    console.log($scope.distancia.value);
   };
 
   $scope.setTime = function(){
+    var date = new Date($scope.programada.time);
+
     if($scope.distancia.checked){
       $scope.programada.checked = false;
-      return;
+      //serial.write('3:1;' + date.getHours() + ':' + date.getMinutes() + '#');
+      alert('3:1;' + date.getHours() + ':' + date.getMinutes() + '#');
+    } else {
+      //serial.write('3:0;' + date.getHours() + ':' + date.getMinutes() + '#');
+      alert('3:0;' + date.getHours() + ':' + date.getMinutes() + '#');
     }
-
-    console.log($scope.programada.time);
   };
 })
 

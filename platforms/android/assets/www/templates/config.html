@@ -1,46 +1,44 @@
 <ion-view view-title="Configurações">
 	<ion-content ng-controller="configCtrl">
-		<ul class="list">
-			<li class="item item-toggle">
+		<div class="list">
+			<div class="item item-toggle">
 		    	Tranca manual
-		    	<label class="toggle toggle-positive" ng-model="manual.checked" ng-init="manual.checked = checaStatus()" ng-click="close()">
-					<input type="checkbox">
+		    	<label class="toggle toggle-positive" ng-click="close()">
+					<input type="checkbox" ng-model="manual.checked" ng-init="manual.checked = checaStatus()">
 		        	<div class="track">
 		        		<div class="handle"></div>
 		       		</div>
 		     	</label>
-			</li>
-
-			<li class="item item-toggle">
+			</div>
+			<hr>
+			<div class="item item-toggle">
 		    	Tranca por distância
-		    	<label class="toggle toggle-positive" ng-model="distancia.checked" ng-init="distancia.checked = checaStatus()" ng-click="close()">
-					<input type="checkbox">
+		    	<label class="toggle toggle-positive" ng-click="setDist()">
+					<input type="checkbox" ng-model="distancia.checked" ng-init="distancia.checked = checaStatus()">
 		        		<div class="track">
 		        	<div class="handle"></div>
 		       		</div>
 		     	</label>
 		     	<br /><br />
-		     	<div class="list">
-		     		<input type="range" min="50" max="100" value="80" ng-model="distancia.value" style="width: 100%;">
-		     		<span class="item-note"> Distância: {{distancia.atual}} </span>
-		     	</div>
-			</li>
-
-			<li class="item item-toggle">
+			</div>
+			<div >
+	     		<input type="range" min="50" max="200" ng-model="distancia.value" ng-click="setDist()">
+	     		<span class="item-note"> Distância: {{distancia.value}} </span>
+	     	</div>
+			<hr>
+			<div class="item item-toggle">
 		    	Tranca programada
-		    	<label class="toggle toggle-positive" ng-model="programada.checked" ng-init="programada.checked = checaStatus()" ng-change="console.log(programada.checked)">
-					<input type="checkbox">
+		    	<label class="toggle toggle-positive" ng-click="setTime()">
+					<input type="checkbox" ng-model="programada.checked" ng-init="programada.checked = checaStatus()">
 		        		<div class="track">
 		        	<div class="handle"></div>
 		       		</div>
 		     	</label>
-
-	     		<span class="item item-icon-right"> 
-	     			Abertura
-	     			<!-- <i class="icon ion-gear-a" ng-click="setTime()"></i> -->
-	     			<input type="time" ng-model="programada.time" ng-click="print()">
-	     		</span>		     	
-			</li>
-		</ul>
+			</div>
+			<div class="item item-icon-right"> 
+     			Abertura
+     			<input type="time" ng-model="programada.time" ng-click="setTime()">
+     		</div>		     	
+		</div>
 	</ion-content>
 </ion-view>

@@ -14,7 +14,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       alert('Error: ' + message);
     };
 
-    serial.requestPermission({vid: '0451', pid: 'f432'},
+    /*serial.requestPermission({vid: '0451', pid: 'f432'},
       function(successMessage) {
         // open serial port
         serial.open({baudRate: 9600}, function(successMessage) {
@@ -50,7 +50,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       },
       // user does not grant permission
       errorCallback
-    );
+    );*/
 
   });
 })
