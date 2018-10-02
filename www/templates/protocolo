@@ -15,6 +15,6 @@ exemplos
 
 MSP -> APP
 
-0: Status tranca (1/0#)
+0: Status tranca (1/0(trancado/des);1/0(distancia ativo/nao);1/0(tempo ativo/não)#)
 1: Posição (lat;long#)
 2: Hora fechamento (tipo(1/2/3);hh;mm#)

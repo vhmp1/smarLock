@@ -1,7 +1,7 @@
 var pathBase = "http://localhost/smartLock/sevices";
 
 angular.module('starter.controllers', ['ngCordova'])
-.controller('mainCtrl', function($scope, $ionicPlatform, $state, $interval, $cordovaGeolocation) {
+.controller('mainCtrl', function($scope, $ionicPlatform, $state, $interval, $cordovaGeolocation, $socket) {
   var options = {timeout: 10000, enableHighAccuracy: true};
 
   //Sobreescreve o funcionamento padrão do botão de retornar no Android;
@@ -26,18 +26,13 @@ angular.module('starter.controllers', ['ngCordova'])
     }); 
   }, 15000);
 
-  // get data from MSP
-  var mspdata = $interval(function() {
-    serial.read(function(buffer){
-      alert(buffer);
-    }, function(){
-      alert("Error!");
-    });
-  }, 10);
+  $scope.t = function(){
+    console.log('aaaaaa');
+  }
 
 })
 
-.controller('statusCtrl', function($scope, $state, $cordovaGeolocation, Position) {
+.controller('statusCtrl', function($scope, $state, $cordovaGeolocation) {
   var options = {timeout: 10000, enableHighAccuracy: true};
  
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
@@ -98,28 +93,18 @@ angular.module('starter.controllers', ['ngCordova'])
 
   $scope.close = function(){
     if($scope.manual.checked){
-      serial.write('1:1#', function(){
-        alert('Sucess!');
-      }, function(){
-        alert('Error!');
-      });
+      socket.emit('aa');
     } else {
-      serial.write('1:0#', function(){
-        alert('Sucess!');
-      }, function(){
-        alert('Error!');
-      });
     }
   };
 
   $scope.setDist = function(){
     if($scope.programada.checked){
       $scope.distancia.checked = false;
-      //serial.write('2:1;' + $scope.distancia.value + '#');
-      console.log('2:1;' + $scope.distancia.value + '#');
+      return;
     } else {
-      //serial.write('2:0;' + $scope.distancia.value + '#');
-      console.log('2:0;' + $scope.distancia.value + '#');
+      //serial.write('2:' + $scope.distancia.checked?1:0 + ';' + $scope.distancia.value + '#');
+      console.log('2:' + $scope.distancia.checked?1:0 + ';' + $scope.distancia.value + '#');
     }
   };
 
@@ -128,11 +113,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
     if($scope.distancia.checked){
       $scope.programada.checked = false;
-      //serial.write('3:1;' + date.getHours() + ':' + date.getMinutes() + '#');
-      alert('3:1;' + date.getHours() + ':' + date.getMinutes() + '#');
+      return;
     } else {
-      //serial.write('3:0;' + date.getHours() + ':' + date.getMinutes() + '#');
-      alert('3:0;' + date.getHours() + ':' + date.getMinutes() + '#');
+      //serial.write('3:' + $scope.distancia.checked?1:0 + ';' + date.getHours() + ':' + date.getMinutes() + '#');
+      alert('3:' + $scope.distancia.checked?1:0 + ';' + date.getHours() + ':' + date.getMinutes() + '#');
     }
   };
 })

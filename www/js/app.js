@@ -9,49 +9,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
-
-    var errorCallback = function(message) {
-      alert('Error: ' + message);
-    };
-
-    /*serial.requestPermission({vid: '0451', pid: 'f432'},
-      function(successMessage) {
-        // open serial port
-        serial.open({baudRate: 9600}, function(successMessage) {
-          open = true;
-          // register the read callback
-          serial.registerReadCallback(function success(data){
-            // decode the received message
-            var view = new Uint8Array(data);
-            if(view.length >= 1) {
-              for(var i=0; i < view.length; i++) {
-                // if we received a \n, the message is complete, display it
-                if(view[i] == 13) {
-                  // check if the read rate correspond to the arduino serial print rate
-                  var now = new Date();
-                  delta.innerText = now - lastRead;
-                  lastRead = now;
-
-                  // display the message
-                  var value = parseInt(str);
-                  pot.innerText = value;
-                  str = '';
-                } else {
-                  var temp_str = String.fromCharCode(view[i]);
-                  var str_esc = escape(temp_str);
-                  str += unescape(str_esc);
-                }
-              }
-            }
-          }, errorCallback);
-        },
-        // error opening the port
-        errorCallback); 
-      },
-      // user does not grant permission
-      errorCallback
-    );*/
-
   });
 })
 
