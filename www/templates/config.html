@@ -3,8 +3,8 @@
 		<div class="list">
 			<div class="item item-toggle">
 		    	Tranca manual
-		    	<label class="toggle toggle-positive" ng-click="close()">
-					<input type="checkbox" ng-model="manual.checked" ng-init="manual.checked = checaStatus()">
+		    	<label class="toggle toggle-positive">
+					<input type="checkbox" ng-model="manual.checked" ng-click="close()">
 		        	<div class="track">
 		        		<div class="handle"></div>
 		       		</div>
@@ -13,8 +13,8 @@
 			<hr>
 			<div class="item item-toggle">
 		    	Tranca por distância
-		    	<label class="toggle toggle-positive" ng-click="setDist()">
-					<input type="checkbox" ng-model="distancia.checked" ng-init="distancia.checked = checaStatus()">
+		    	<label class="toggle toggle-positive">
+					<input type="checkbox" ng-model="distancia.checked" ng-click="setDist()">
 		        		<div class="track">
 		        	<div class="handle"></div>
 		       		</div>
@@ -22,14 +22,14 @@
 		     	<br /><br />
 			</div>
 			<div >
-	     		<input type="range" min="50" max="200" ng-model="distancia.value" ng-click="setDist()">
+	     		<input type="range" min="50" max="200" ng-model="distancia.value" value='52' ng-click="setDist()">
 	     		<span class="item-note"> Distância: {{distancia.value}} </span>
 	     	</div>
 			<hr>
 			<div class="item item-toggle">
 		    	Tranca programada
-		    	<label class="toggle toggle-positive" ng-click="t()">
-					<input type="checkbox" ng-model="programada.checked" ng-init="programada.checked = checaStatus()">
+		    	<label class="toggle toggle-positive">
+					<input type="checkbox" ng-model="programada.checked" ng-click="setTime()">
 		        		<div class="track">
 		        	<div class="handle"></div>
 		       		</div>
@@ -37,7 +37,7 @@
 			</div>
 			<div class="item item-icon-right"> 
      			Abertura
-     			<input type="time" ng-model="programada.time" ng-click="setTime()">
+     			<input type="time" ng-model="programada.time" value='11:15'>
      		</div>		     	
 		</div>
 	</ion-content>

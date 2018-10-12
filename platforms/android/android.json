@@ -67,6 +67,22 @@
                         {
                             "xml": "<feature name=\"Serial\"><param name=\"android-package\" value=\"fr.drangies.cordova.serial.Serial\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SocketsForCordova\"><param name=\"android-package\" value=\"cz.blocshop.socketsforcordova.SocketPlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"BackgroundMode\"><param name=\"android-package\" value=\"de.appplant.cordova.plugin.background.BackgroundMode\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"KeepRunning\" value=\"true\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"AndroidLaunchMode\" value=\"singleInstance\" />",
+                            "count": 1
                         }
                     ],
                     "/widget": [
@@ -143,6 +159,10 @@
                         {
                             "xml": "<service android:exported=\"false\" android:name=\"com.adobe.phonegap.push.RegistrationIntentService\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<service android:name=\"de.appplant.cordova.plugin.background.ForegroundService\" />",
+                            "count": 1
                         }
                     ],
                     "/manifest": [
@@ -160,7 +180,7 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
-                            "count": 1
+                            "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
@@ -168,7 +188,7 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
-                            "count": 1
+                            "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.VIBRATE\" />",
@@ -741,6 +761,12 @@
         },
         "cordova-plugin-bluetooth-serial": {
             "PACKAGE_NAME": "com.setapp.mecalor"
+        },
+        "cz.blocshop.socketsforcordova": {
+            "PACKAGE_NAME": "com.setapp.mecalor"
+        },
+        "cordova-plugin-background-mode": {
+            "PACKAGE_NAME": "com.setapp.mecalor"
         }
     },
     "dependent_plugins": {},
@@ -1060,6 +1086,23 @@
             "clobbers": [
                 "window.bluetoothSerial"
             ]
+        },
+        {
+            "id": "cz.blocshop.socketsforcordova.Socket",
+            "file": "plugins/cz.blocshop.socketsforcordova/socket.js",
+            "pluginId": "cz.blocshop.socketsforcordova",
+            "clobbers": [
+                "window.Socket"
+            ]
+        },
+        {
+            "id": "cordova-plugin-background-mode.BackgroundMode",
+            "file": "plugins/cordova-plugin-background-mode/www/background-mode.js",
+            "pluginId": "cordova-plugin-background-mode",
+            "clobbers": [
+                "cordova.plugins.backgroundMode",
+                "plugin.backgroundMode"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -1079,6 +1122,8 @@
         "cordova-plugin-geolocation": "2.4.3",
         "cordova-plugin-datepicker": "0.9.3",
         "fr.drangies.cordova.serial": "0.0.7",
-        "cordova-plugin-bluetooth-serial": "0.4.7"
+        "cordova-plugin-bluetooth-serial": "0.4.7",
+        "cz.blocshop.socketsforcordova": "1.1.0",
+        "cordova-plugin-background-mode": "0.7.2"
     }
 }

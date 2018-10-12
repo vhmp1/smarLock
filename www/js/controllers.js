@@ -1,7 +1,5 @@
-var pathBase = "http://localhost/smartLock/sevices";
-
 angular.module('starter.controllers', ['ngCordova'])
-.controller('mainCtrl', function($scope, $ionicPlatform, $state, $interval, $cordovaGeolocation, $socket) {
+.controller('mainCtrl', function($scope, $ionicPlatform, $state, $interval, $cordovaGeolocation, socket) {
   var options = {timeout: 10000, enableHighAccuracy: true};
 
   //Sobreescreve o funcionamento padrão do botão de retornar no Android;
@@ -15,25 +13,75 @@ angular.module('starter.controllers', ['ngCordova'])
     $state.go("app.main");
   }, 1000);
 
-  // send GPS position via serial
-  var gps = $interval(function() {
-    $cordovaGeolocation.getCurrentPosition(options).then(function(position){
-      var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      console.log("0:" + latLng.lat() + ";" + latLng.lng() + "#");
-      // serial.write("0:" + latLng.lat() + ";" + latLng.lng() + "#");
-    }, function(error){
-      console.log("Could not get location");
-    }); 
-  }, 15000);
 
-  $scope.t = function(){
-    console.log('aaaaaa');
-  }
+  socket.on('message', function(message) {
+    console.log(message);
+     
+    var s_message = message.split(':');
+    s_message = s_message.substring(0, s_message.length-1);
+
+    switch(s_message[0]){
+      case 0:
+        var status = s_message[1].split(';');
+
+        window.localStorage['status'] = status[0];
+
+        var dist = status[1].split('-');
+        window.localStorage['maxDist'] = dist[0];
+        window.localStorage['distOn'] = dist[1];
+
+        var time = status[2].split('-');
+        window.localStorage['time'] = time[0].replace(',', ':');
+        window.localStorage['progOn'] = time[1];
+        break;
+      case 1:
+        var coords = s_message[1].split(';');
+        var latLng = new google.maps.LatLng(coords[0], coords[1]);
+        window.localStorage['devicePos'] = JSON.stringify(latLng);
+        break;
+      case 2:
+          var activity = s_message[1].split(';');
+
+          var type;
+          switch(activity[0]){
+            case 1:
+              type = 'Tranca manual';
+              break;
+            case 2:
+              type = 'Tranca por distância';
+              break;
+            case 3:
+              type = 'Tranca programada';
+              break;
+          }
+
+          var date = new Date();
+
+          var entry = {
+              "type": type,
+              "date": date
+          };
+
+          var existingEntries = JSON.parse(localStorage.getItem('activities')) || [];
+          existingEntries.push(entry);
+          localStorage.setItem('activities', JSON.stringify(existingEntries));
+        break;
+      default:
+        alert("Error in message!");
+    }
+
+  });
 
 })
 
 .controller('statusCtrl', function($scope, $state, $cordovaGeolocation) {
   var options = {timeout: 10000, enableHighAccuracy: true};
+
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
+    $scope.status.checked = window.localStorage.getItem('status')=='1'?true:false;
+    $scope.devicePos = JSON.parse(window.localStorage.getItem('devicePos'));
+    $scope.maxDist = window.localStorage.getItem('maxDist');
+  });
  
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
     var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -48,10 +96,21 @@ angular.module('starter.controllers', ['ngCordova'])
     //Wait until the map is loaded
     google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       var marker = new google.maps.Marker({
-          map: $scope.map,
-          animation: google.maps.Animation.DROP,
-          position: latLng
-      });     
+        map: $scope.map,
+        animation: google.maps.Animation.DROP,
+        position: latLng
+      });
+
+      var deviceRange = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: $scope.map,
+        center: $scope.devicePos,
+        radius: $scope.maxDist
+      });
      
       var infoWindow = new google.maps.InfoWindow({
           content: "Here I am!"
@@ -65,7 +124,6 @@ angular.module('starter.controllers', ['ngCordova'])
         console.log("disableclicks");
       });
 
-
     });
 
   }, function(error){
@@ -73,13 +131,20 @@ angular.module('starter.controllers', ['ngCordova'])
   });
 })
 
-.controller('configCtrl', function($scope, $ionicHistory, $ionicSideMenuDelegate, $ionicPlatform) {
+.controller('configCtrl', function($scope, $ionicHistory, $ionicSideMenuDelegate, $ionicPlatform, socket) {
   $scope.manual = {};
   $scope.programada = {};
   $scope.distancia = {};
 
-  $scope.distancia.value = 70;
-  $scope.programada.time = new Date('9:20:05');
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
+    $scope.manual.checked = window.localStorage.getItem('status')=='1'?true:false;
+
+    $scope.distancia.checked = window.localStorage.getItem('distOn')=='1'?true:false;
+    $scope.distancia.value = window.localStorage.getItem('dist') || 200;
+
+    $scope.programada.checked = window.localStorage.getItem('progOn')=='1'?true:false;
+    $scope.programada.time = window.localStorage.getItem('prog') || '11:15';
+  });
 
   // disable menu 
   $scope.$on('$ionicView.afterEnter', function(event) {
@@ -92,10 +157,9 @@ angular.module('starter.controllers', ['ngCordova'])
   });
 
   $scope.close = function(){
-    if($scope.manual.checked){
-      socket.emit('aa');
-    } else {
-    }
+    var status = $scope.manual.checked?1:0;
+    socket.emit('message', '1:' + status  + '#');
+    // console.log('1:' + status  + '#');
   };
 
   $scope.setDist = function(){
@@ -103,8 +167,9 @@ angular.module('starter.controllers', ['ngCordova'])
       $scope.distancia.checked = false;
       return;
     } else {
-      //serial.write('2:' + $scope.distancia.checked?1:0 + ';' + $scope.distancia.value + '#');
-      console.log('2:' + $scope.distancia.checked?1:0 + ';' + $scope.distancia.value + '#');
+      var status = $scope.distancia.checked?1:0;
+      socket.emit('message', '2:' + status + ';' + $scope.distancia.value + '#');
+      // console.log("2:" + status + ";" + $scope.distancia.value + "#");
     }
   };
 
@@ -115,12 +180,18 @@ angular.module('starter.controllers', ['ngCordova'])
       $scope.programada.checked = false;
       return;
     } else {
-      //serial.write('3:' + $scope.distancia.checked?1:0 + ';' + date.getHours() + ':' + date.getMinutes() + '#');
-      alert('3:' + $scope.distancia.checked?1:0 + ';' + date.getHours() + ':' + date.getMinutes() + '#');
+      var status = $scope.distancia.checked?1:0;
+      socket.emit('message', '3:' + status + ';' + date.getHours() + ':' + date.getMinutes() + '#');
+      // console.log('3:' + status + ';' + date.getHours() + ';' + date.getMinutes() + '#');
     }
   };
 })
 
 .controller('historyCtrl', function($scope) {
-  var a = 1;
+  var ar = [{type:"Abertura manual", date:"04/10/2018 9:32"}, {type:"Abertura programada", date:"03/10/2018 4:32"}]
+  $scope.activities = ar;
+
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
+    $scope.activities = JSON.parse(window.localStorage.getItem('activities'));
+  });
 });

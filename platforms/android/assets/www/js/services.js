@@ -1,11 +1,10 @@
+var baseUrl = 'http://192.168.0.9:5000/';
+
 angular.module('starter.services', [])
 
-//Factories (fábricas) de dados;
-//O if(!promise) comentado em cada Factory checa (quando ativado) se os dados já foram baixados na seção atual,
-//para evitar o download a cada vez que a tela for aberta.
-
 .factory('socket', function($rootScope){
-  var socket = io.connect();
+  //var socket = io.connect(baseUrl);
+  var socket = io(baseUrl, {transports: ['websocket'], upgrade: false});
   
   return {
     on: function (eventName, callback) {

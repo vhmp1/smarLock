@@ -1,6 +1,6 @@
 angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $cordovaGeolocation, socket) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -10,6 +10,42 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       StatusBar.styleDefault();
     }
   });
+
+  document.addEventListener('deviceready', function () {
+    cordova.plugins.backgroundMode.overrideBackButton();
+    cordova.plugins.backgroundMode.excludeFromTaskList();
+
+    cordova.plugins.backgroundMode.configure({silent: true});
+    cordova.plugins.backgroundMode.setDefaults({
+      title: "smartLock",
+      text: "Checando posição do dispositivo...",
+    });
+
+    // Enable background mode
+    cordova.plugins.backgroundMode.enable();
+    cordova.plugins.backgroundMode.isActive();
+
+    cordova.plugins.backgroundMode.on('activate', function () {
+      cordova.plugins.backgroundMode.disableWebViewOptimizations();
+    });
+
+    // Run when the device is ready
+    // Called when background mode has been activated
+    cordova.plugins.backgroundMode.onactivate = function () {
+      // send GPS position via socket
+      var gps = $interval(function() {
+        $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+          // var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          console.log("0:" + latLng.lat() + ";" + latLng.lng() + "#");
+          socket.emit("message", "0:" + latLng.lat() + ";" + latLng.lng() + "#");
+        }, function(error){
+          console.log("Could not get location");
+        }); 
+      }, 15000);
+    }
+
+  }, false);
+
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
