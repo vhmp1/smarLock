@@ -56,7 +56,7 @@ angular.module('starter.controllers', ['ngCordova'])
           }
 
           var date = new Date();
-          
+
           var entry = {
               "type": type,
               "date": date
@@ -140,10 +140,10 @@ angular.module('starter.controllers', ['ngCordova'])
     $scope.manual.checked = window.localStorage.getItem('status')=='1'?true:false;
 
     $scope.distancia.checked = window.localStorage.getItem('distOn')=='1'?true:false;
-    $scope.distancia.value = window.localStorage.getItem('dist');
+    $scope.distancia.value = window.localStorage.getItem('dist') || 200;
 
     $scope.programada.checked = window.localStorage.getItem('progOn')=='1'?true:false;
-    $scope.programada.time = new Date(window.localStorage.getItem('prog'));
+    $scope.programada.time = window.localStorage.getItem('prog') || '11:15';
   });
 
   // disable menu 

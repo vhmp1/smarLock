@@ -65,7 +65,7 @@
     <author email="setapp@setapp.com" href="http://setappufv.com.br/">
       SetApp UFV
     </author>
-    <content original-src="index.html" src="http://192.168.0.16:8101" />
+    <content src="index.html" />
     <access origin="*" subdomains="true" />
     <allow-navigation href="*" />
     <preference name="loglevel" value="DEBUG" />

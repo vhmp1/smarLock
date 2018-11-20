@@ -1,4 +1,4 @@
-var baseUrl = 'http://192.168.0.9:5000/';
+var baseUrl = 'http://10.0.3.2:5000/';
 
 angular.module('starter.services', [])
 

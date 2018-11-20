@@ -17,8 +17,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
     cordova.plugins.backgroundMode.configure({silent: true});
     cordova.plugins.backgroundMode.setDefaults({
-      title: "My App",
-      text: "Something here",
+      title: "smartLock",
+      text: "Checando posição do dispositivo...",
     });
 
     // Enable background mode
@@ -35,7 +35,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       // send GPS position via socket
       var gps = $interval(function() {
         $cordovaGeolocation.getCurrentPosition(options).then(function(position){
-          var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          // var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
           console.log("0:" + latLng.lat() + ";" + latLng.lng() + "#");
           socket.emit("message", "0:" + latLng.lat() + ";" + latLng.lng() + "#");
         }, function(error){

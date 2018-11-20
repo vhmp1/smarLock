@@ -22,7 +22,7 @@
 		     	<br /><br />
 			</div>
 			<div >
-	     		<input type="range" min="50" max="200" ng-model="distancia.value" ng-click="setDist()">
+	     		<input type="range" min="50" max="200" ng-model="distancia.value" value='52' ng-click="setDist()">
 	     		<span class="item-note"> Distância: {{distancia.value}} </span>
 	     	</div>
 			<hr>
@@ -37,7 +37,7 @@
 			</div>
 			<div class="item item-icon-right"> 
      			Abertura
-     			<input type="time" ng-model="programada.time">
+     			<input type="time" ng-model="programada.time" value='11:15'>
      		</div>		     	
 		</div>
 	</ion-content>
